@@ -1,5 +1,4 @@
 import BookingMethods from '@components/BookingMethods';
-import Partners from '@components/Partners';
 import PaymentMethods from '@components/PaymentMethods';
 import PopularFlights from '@components/PopularFlights';
 import WhyChooseUs from '@components/WhyChooseUs';
@@ -16,7 +15,6 @@ const Index: React.FC = () => {
 				<PaymentMethods />
 			</div>
 			<WhyChooseUs />
-			<Partners />
 		</>
 	);
 };

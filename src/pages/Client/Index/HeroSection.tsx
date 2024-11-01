@@ -18,6 +18,7 @@ import { vi } from 'date-fns/locale';
 import React, { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useNavigate } from 'react-router-dom';
 
 type Region = {
 	name: string;
@@ -223,6 +224,15 @@ const COUNTRIES: Country[] = [
 ];
 
 const HeroSection: React.FC = () => {
+	const navigate = useNavigate();
+	const [isMobile, setIsMobile] = useState(false);
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 	const [flightType, setFlightType] = useState<'one-way' | 'round-trip'>(
 		'one-way',
 	);
@@ -500,14 +510,47 @@ const HeroSection: React.FC = () => {
 		setToLocation(fromLocation);
 	};
 
+	const handleSearch = () => {
+		const searchParams = new URLSearchParams({
+			from: `${fromLocation.city} (${fromLocation.code})`,
+			to: `${toLocation.city} (${toLocation.code})`,
+			departureDate: departureDate
+				? format(departureDate, 'dd/MM/yyyy')
+				: '',
+			returnDate: returnDate ? format(returnDate, 'dd/MM/yyyy') : '',
+			passengers: JSON.stringify(passengerCounts),
+			flightType,
+		});
+		if (
+			flightType === 'round-trip' &&
+			returnDate &&
+			returnDate.toString() !== ''
+		) {
+			navigate(`/tim-chuyen-bay?${searchParams.toString()}`);
+		} else {
+			searchParams.delete('returnDate');
+			searchParams.set('flightType', 'one-way');
+			navigate(`/tim-chuyen-bay?${searchParams.toString()}`);
+		}
+	};
+
+	const searchButton = (
+		<button
+			onClick={handleSearch}
+			className='w-full rounded-lg bg-[#ff6805] px-6 py-3 font-medium text-white transition-all hover:bg-[#ff8534] active:scale-[0.98] active:bg-[#ff6805]'
+		>
+			Tìm chuyến bay
+		</button>
+	);
+
 	return (
 		<div className='sm:relative md:flex md:flex-col'>
 			<img
 				src={Banner}
 				alt='banner'
-				className='sm:object-cover w-full sm:h-[400px] md:h-[500px] md:w-full'
+				className='w-full sm:h-[400px] sm:object-cover md:h-[500px] md:w-full'
 			/>
-			<div className='sm:absolute bottom-0 left-0 right-0 flex w-full flex-col items-center justify-center p-4 sm:bottom-8 md:bg-transparent'>
+			<div className='bottom-0 left-0 right-0 flex w-full flex-col items-center justify-center p-4 sm:absolute sm:bottom-8 md:bg-transparent'>
 				<div className='relative w-full max-w-7xl rounded-lg bg-white p-4 sm:w-11/12 sm:p-6 md:mx-auto md:shadow-xl lg:px-10 lg:py-6'>
 					<div className='flex flex-col gap-4 sm:flex-row sm:justify-between'>
 						<div className='flex items-center gap-2'>
@@ -754,7 +797,6 @@ const HeroSection: React.FC = () => {
 							)}
 						</div>
 					</div>
-
 					<div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-12'>
 						<div
 							ref={fromLocationDropdownRef}
@@ -775,18 +817,19 @@ const HeroSection: React.FC = () => {
 							</div>
 							{showLocations === 'from' && <LocationDropdown />}
 						</div>
-
-						<div className='col-span-full flex items-center justify-center sm:col-span-1'>
-							<div
-								className='cursor-pointer rounded-full border border-gray-300 p-2 transition-all hover:border-[#ff6805] hover:bg-orange-50 active:scale-95 active:bg-orange-100'
-								onClick={handleSwitchLocations}
-							>
-								<FontAwesomeIcon
-									icon={faArrowRightArrowLeft}
-									className='text-gray-600 transition-all hover:text-[#ff6805]'
-								/>
+						{!isMobile && (
+							<div className='col-span-full flex items-center justify-center sm:col-span-1'>
+								<div
+									className='cursor-pointer rounded-full border border-gray-300 p-2 transition-all hover:border-[#ff6805] hover:bg-orange-50 active:scale-95 active:bg-orange-100'
+									onClick={handleSwitchLocations}
+								>
+									<FontAwesomeIcon
+										icon={faArrowRightArrowLeft}
+										className='text-gray-600 transition-all hover:text-[#ff6805]'
+									/>
+								</div>
 							</div>
-						</div>
+						)}
 
 						<div
 							ref={toLocationDropdownRef}
@@ -809,12 +852,9 @@ const HeroSection: React.FC = () => {
 						</div>
 
 						<div className='col-span-full sm:col-span-3'>
-							<button className='w-full rounded-lg bg-[#ff6805] px-6 py-3 font-medium text-white transition-all hover:bg-[#ff8534] active:scale-[0.98] active:bg-[#ff6805]'>
-								Tìm chuyến bay
-							</button>
+							{!isMobile && searchButton}
 						</div>
 					</div>
-
 					<div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-12'>
 						<div className='col-span-full sm:col-span-4'>
 							<DatePicker
@@ -889,6 +929,9 @@ const HeroSection: React.FC = () => {
 							/>
 						</div>
 					</div>
+					{isMobile && (
+						<div className='mt-4 sm:hidden'>{searchButton}</div>
+					)}
 				</div>
 			</div>
 

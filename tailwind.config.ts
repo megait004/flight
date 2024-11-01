@@ -5,7 +5,7 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				roboto: ['Roboto', 'sans-serif'],
+				montserrat: ['Montserrat', 'sans-serif'],
 			},
 		},
 	},

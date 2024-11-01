@@ -15,7 +15,7 @@
 	}
 
 	* {
-		@apply m-0 box-border appearance-none p-0 focus:outline-none font-roboto;
+		@apply m-0 box-border appearance-none p-0 focus:outline-none font-montserrat;
 	}
 
 	html {

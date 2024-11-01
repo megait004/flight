@@ -1,8 +1,11 @@
 import favicon from '@assets/images/favicon.png';
+import Footer from '@components/Footer';
 import Header from '@components/Header';
+import Partners from '@components/Partners';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Outlet } from 'react-router-dom';
+
 const Layout: React.FC = () => {
 	return (
 		<>
@@ -12,6 +15,8 @@ const Layout: React.FC = () => {
 			</Helmet>
 			<Header />
 			<Outlet />
+			<Partners />
+			<Footer />
 		</>
 	);
 };
