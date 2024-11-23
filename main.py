@@ -1,20 +1,21 @@
+import os
 import sqlite3
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 
 import jwt
-from flask import Flask, json, jsonify, request, render_template
+from flask import Flask, json, jsonify, redirect, request, render_template, send_from_directory
 from flask_cors import CORS
 from flask_mail import Mail, Message
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder="dist",template_folder="dist")
 CORS(app, resources={
     r"/api/*": {
         "origins": [
             "http://localhost:5173",
             "http://localhost:4173",
             "http://127.0.0.1:5173",
-            "https://duchoc.online",
+            "https://giapzech.tech",
         ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
@@ -491,8 +492,30 @@ def get_admin_history_booking():
         'message': 'Lấy lịch sử thành công',
         'data': bookings
     })
+@app.route( "/admin/login")
+def admin():
+    host = request.headers.get("Host").split(":")[0].replace("/", "").replace(
+        "\\", "").strip()
+    print(host)
+    if host != "admin.giapzech.tech":
+        return redirect("/") ,302
+    return render_template("index.html")
 
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+def serve_static_or_index(path):
+    if os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return render_template("index.html")
+@app.route("/<path:path>")
+def catch_all(path):
+    if os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return serve_static_or_index(path)
 @app.route('/api/admin/history-booking/<int:booking_id>', methods=['DELETE'])
 @token_required
 def delete_booking(booking_id):
@@ -558,7 +581,5 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods',
                          'GET,PUT,POST,DELETE,OPTIONS')
     return response
-
-
 if __name__ == '__main__':
     app.run(debug=True)

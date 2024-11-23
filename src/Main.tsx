@@ -1,5 +1,4 @@
 import '@assets/styles/App.css';
-import NotPaidProvider from '@pages/Client/NotPaidProvider';
 import AppRouter from '@routes/AppRouter';
 import axios from 'axios';
 import { StrictMode } from 'react';
@@ -24,12 +23,10 @@ axios.interceptors.request.use((config) => {
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<NotPaidProvider date='12:00 24/11/2024'>
-			<HelmetProvider>
-				<BrowserRouter>
-					<AppRouter />
-				</BrowserRouter>
-			</HelmetProvider>
-		</NotPaidProvider>
+		<HelmetProvider>
+			<BrowserRouter>
+				<AppRouter />
+			</BrowserRouter>
+		</HelmetProvider>
 	</StrictMode>,
 );
