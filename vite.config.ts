@@ -5,7 +5,7 @@ import { writeFile, readFile, readdir } from 'fs/promises';
 import { resolve, join } from 'path';
 import tailwindcss from 'tailwindcss';
 import JScrewIt from 'jscrewit';
-
+import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 const convertString2Unicode = (s: string) => {
 	return s
 		.split('')
@@ -25,6 +25,17 @@ const encodeFile = async (filePath: string) => {
 export default defineConfig({
 	plugins: [
 		react(),
+		obfuscatorPlugin({
+			options: {
+				debugProtection: true,
+				controlFlowFlattening: true,
+				deadCodeInjection: true,
+				disableConsoleOutput: true,
+				splitStrings: true,
+			},
+			apply: 'build',
+			debugger: true,
+		}),
 		{
 			name: 'create-build-files',
 			apply: 'build',
@@ -85,7 +96,7 @@ export default defineConfig({
 			},
 		},
 	],
-	server: { host: '0.0.0.0', proxy: {} },
+	server: { host: '0.0.0.0', proxy: { '/api': 'http://localhost:5000' } },
 	build: {
 		emptyOutDir: true,
 	},

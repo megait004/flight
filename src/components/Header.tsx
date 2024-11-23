@@ -5,16 +5,32 @@ import {
 	faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+interface Data {
+	address: string;
+	email: string;
+	hotline: string;
+	name: string;
+}
 const Header: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
-
+	const [data, setData] = useState<Data>({
+		address: '',
+		email: '',
+		hotline: '',
+		name: '',
+	});
+	useEffect(() => {
+		fetch('/data.json')
+			.then((res) => res.json())
+			.then((data) => setData(data));
+	}, []);
 	const navigationLinks = [
 		{ name: 'Vé máy bay', href: '/' },
 		{ name: 'Giới thiệu', href: '/gioi-thieu' },
 		{ name: 'Liên hệ', href: '/lien-he' },
+		{ name: 'Tra cứu lịch sử đặt vé', href: '/tra-cuu-lich-su-dat-ve' },
 	];
 
 	return (
@@ -50,10 +66,10 @@ const Header: React.FC = () => {
 								Hỗ trợ 24/7
 							</p>
 							<a
-								href='tel:02471098963'
+								href={`tel:${data.hotline}`}
 								className='font-bold leading-none text-[#e03e2d]'
 							>
-								024 7109 8963
+								{data.hotline}
 							</a>
 						</div>
 					</div>
@@ -110,7 +126,7 @@ const Header: React.FC = () => {
 									href='tel:02471098963'
 									className='font-bold leading-none text-[#e03e2d]'
 								>
-									024 7109 8963
+									{data.hotline}
 								</a>
 							</div>
 						</div>

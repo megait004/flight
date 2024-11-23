@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-
+interface Data {
+	address: string;
+	email: string;
+	hotline: string;
+	name: string;
+}
 interface Testimonial {
 	id: number;
 	name: string;
 	location: string;
 	content: string;
 }
-
 const WhyChooseUs: React.FC = () => {
+	const [data, setData] = useState<Data>({
+		address: '',
+		email: '',
+		hotline: '',
+		name: '',
+	});
+	useEffect(() => {
+		fetch('/data.json')
+			.then((res) => res.json())
+			.then((data) => setData(data));
+	}, []);
 	const testimonials: Testimonial[] = [
 		{
 			id: 1,
 			name: 'Nguyễn Linh Đan',
 			location: 'Ho Chi Minh',
-			content:
-				'Tuyệt vời. Đội ngũ chăm sóc khách hàng của Săn Vé Giá Rẻ 24h phục vụ tận tình chu đáo, dẫn dò khách hàng cẩn thận. Tôi tin tưởng tuyệt đối vào Săn Vé Giá Rẻ 24h.',
+			content: `Tuyệt vời. Đội ngũ chăm sóc khách hàng của ${data.name} phục vụ tận tình chu đáo, dẫn dò khách hàng cẩn thận. Tôi tin tưởng tuyệt đối vào ${data.name}.`,
 		},
 		{
 			id: 2,
@@ -28,8 +42,7 @@ const WhyChooseUs: React.FC = () => {
 			id: 3,
 			name: 'Phạm Thủy Quỳnh',
 			location: 'Nghệ An',
-			content:
-				'Mình đã đặt vé trên Săn Vé Giá Rẻ 24h đi nước ngoài,rất hài lòng với cách làm việc của các bạn đó là chắc chắn.',
+			content: `Mình đã đặt vé trên ${data.name} đi nước ngoài,rất hài lòng với cách làm việc của các bạn đó là chắc chắn.`,
 		},
 	];
 

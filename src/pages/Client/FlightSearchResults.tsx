@@ -1,3 +1,7 @@
+import Bamboo from '@assets/airlines/bamboo.png';
+import PacificAirlines from '@assets/airlines/pacific-airlines.png';
+import VietJet from '@assets/airlines/vj.png';
+import VietnamAirlines from '@assets/airlines/vn.png';
 import {
 	faArrowRight,
 	faCalendarDays,
@@ -11,7 +15,8 @@ import {
 	faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Flight {
@@ -24,21 +29,19 @@ interface Flight {
 	arrivalTime: string;
 	price: number;
 	duration: string;
+	distance?: number;
+}
+interface ApiConfig {
+	loadingTime: number;
+	maxPrice: number;
+	minPrice: number;
 }
 
-const apiConfig = {
-	priceRange: {
-		min: 1000000,
-		max: 5000000,
-	},
-	loadingTime: 1000,
-};
-
 const airlines = [
-	{ name: 'Vietnam Airlines', logo: '/airlines/vn.png' },
-	{ name: 'Bamboo Airways', logo: '/airlines/bamboo.png' },
-	{ name: 'VietJet Air', logo: '/airlines/vj.png' },
-	{ name: 'Pacific Airlines', logo: '/airlines/pacific-airlines.png' },
+	{ name: 'Vietnam Airlines', logo: VietnamAirlines },
+	{ name: 'Bamboo Airways', logo: Bamboo },
+	{ name: 'VietJet Air', logo: VietJet },
+	{ name: 'Pacific Airlines', logo: PacificAirlines },
 ];
 
 const VIETNAMESE_NAME_REGEX =
@@ -46,7 +49,10 @@ const VIETNAMESE_NAME_REGEX =
 
 const FlightSearchResults: React.FC = () => {
 	const location = useLocation();
-	const searchParams = new URLSearchParams(location.search);
+	const searchParams = useMemo(
+		() => new URLSearchParams(location.search),
+		[location.search],
+	);
 	const [flights, setFlights] = useState<Flight[]>([]);
 	const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
 	const [showModal, setShowModal] = useState(false);
@@ -55,38 +61,80 @@ const FlightSearchResults: React.FC = () => {
 	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = useState(true);
 
-	const generateRandomFlights = () => {
-		const randomFlights: Flight[] = [];
-		for (let i = 0; i < 10; i++) {
-			const departureHour = Math.floor(Math.random() * 24);
-			const durationHours = Math.floor(Math.random() * 5) + 1;
-			const arrivalHour = (departureHour + durationHours) % 24;
-
-			const flight: Flight = {
-				id: `FL${Math.floor(Math.random() * 10000)}`,
-				airline: airlines[Math.floor(Math.random() * airlines.length)],
-				departureTime: `${departureHour.toString().padStart(2, '0')}:00`,
-				arrivalTime: `${arrivalHour.toString().padStart(2, '0')}:00`,
-				price: Math.floor(
-					Math.random() *
-						(apiConfig.priceRange.max - apiConfig.priceRange.min) +
-						apiConfig.priceRange.min,
-				),
-				duration: `${durationHours}h 00m`,
-			};
-			randomFlights.push(flight);
-		}
-		return randomFlights;
-	};
-
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			setFlights(generateRandomFlights());
-			setIsLoading(false);
-		}, apiConfig.loadingTime);
+		const getApiConfig = async () => {
+			const res = await axios.get('/api/config');
+			return res.data;
+		};
 
-		return () => clearTimeout(timer);
-	}, []);
+		const generateRandomFlights = (apiConfig: ApiConfig) => {
+			const randomFlights: Flight[] = [];
+			const baseDistance = parseInt(searchParams.get('distance') ?? '0');
+
+			const durationStr = searchParams.get('duration') ?? '0m';
+			const hoursRegex = /(\d+)h/;
+			const minutesRegex = /(\d+)m/;
+			const hours = parseInt(hoursRegex.exec(durationStr)?.[1] ?? '0');
+			const minutes = parseInt(
+				minutesRegex.exec(durationStr)?.[1] ?? '0',
+			);
+			const baseDuration = hours * 60 + minutes;
+
+			for (let i = 0; i < 20; i++) {
+				const distanceVariation = Math.floor(
+					baseDistance * (0.9 + Math.random() * 0.2),
+				);
+				const durationVariation =
+					baseDuration + Math.floor(Math.random() * 31) - 15;
+				const finalDuration = Math.max(durationVariation, 20);
+
+				const departureHour = Math.floor(Math.random() * 24);
+				const departureMinute = Math.floor(Math.random() * 4) * 15;
+
+				const totalMinutes =
+					departureHour * 60 + departureMinute + finalDuration;
+				const arrivalHour = Math.floor((totalMinutes / 60) % 24);
+				const arrivalMinute = totalMinutes % 60;
+
+				const flight: Flight = {
+					id: `FL${Math.floor(Math.random() * 10000)}`,
+					airline:
+						airlines[Math.floor(Math.random() * airlines.length)],
+					departureTime: `${departureHour.toString().padStart(2, '0')}:${departureMinute.toString().padStart(2, '0')}`,
+					arrivalTime: `${arrivalHour.toString().padStart(2, '0')}:${arrivalMinute.toString().padStart(2, '0')}`,
+					price: Math.floor(
+						Math.random() *
+							(apiConfig.maxPrice - apiConfig.minPrice) +
+							apiConfig.minPrice,
+					),
+					duration:
+						finalDuration >= 60
+							? `${Math.floor(finalDuration / 60)}h ${finalDuration % 60}m`
+							: `${finalDuration}m`,
+					distance: distanceVariation,
+				};
+				randomFlights.push(flight);
+			}
+			return randomFlights;
+		};
+
+		let mounted = true;
+
+		getApiConfig().then((apiConfig) => {
+			if (mounted) {
+				const timer = setTimeout(() => {
+					setFlights(generateRandomFlights(apiConfig));
+					setIsLoading(false);
+				}, apiConfig.loadingTime);
+
+				return () => clearTimeout(timer);
+			}
+		});
+
+		return () => {
+			mounted = false;
+		};
+	}, [searchParams]);
 
 	const handleFlightSelect = (flight: Flight) => {
 		setSelectedFlight(flight);
@@ -299,7 +347,8 @@ const FlightSearchResults: React.FC = () => {
 										</div>
 									</div>
 									<p className='mt-2 text-center text-sm text-gray-600'>
-										Thời gian bay: {flight.duration}
+										Thời gian bay: {flight.duration} •
+										Khoảng cách: {flight.distance}km
 									</p>
 								</div>
 

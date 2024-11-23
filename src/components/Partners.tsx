@@ -1,19 +1,30 @@
+import Bamboo from '@assets/airlines/bamboo.png';
+import Cathay from '@assets/airlines/cathay-pacific.png';
+import Etihad from '@assets/airlines/etihad.png';
+import PacificAirlines from '@assets/airlines/pacific-airlines.png';
+import SingaporeAirlines from '@assets/airlines/singapore-airlines.png';
+import ThaiAirways from '@assets/airlines/thai-airways.png';
+import ThaiLionAir from '@assets/airlines/thai-lion.png';
+import VietJet from '@assets/airlines/vietjet.png';
+import VietnamAirlines from '@assets/airlines/vietnam-airlines.png';
+import Vietravel from '@assets/airlines/vietravel.png';
 import React from 'react';
+
 const Partners: React.FC = () => {
 	const airlines = [
-		{ name: 'Thai Lion Air', logo: '/airlines/thai-lion.png' },
+		{ name: 'Thai Lion Air', logo: ThaiLionAir },
 		{
 			name: 'Singapore Airlines',
-			logo: '/airlines/singapore-airlines.png',
+			logo: SingaporeAirlines,
 		},
-		{ name: 'Thai Airways', logo: '/airlines/thai-airways.png' },
-		{ name: 'Etihad Airways', logo: '/airlines/etihad.png' },
-		{ name: 'Vietnam Airlines', logo: '/airlines/vietnam-airlines.png' },
-		{ name: 'Pacific Airlines', logo: '/airlines/pacific-airlines.png' },
-		{ name: 'VietJet Air', logo: '/airlines/vietjet.png' },
-		{ name: 'Bamboo Airways', logo: '/airlines/bamboo.png' },
-		{ name: 'Vietravel Airlines', logo: '/airlines/vietravel.png' },
-		{ name: 'Cathay Pacific', logo: '/airlines/cathay-pacific.png' },
+		{ name: 'Thai Airways', logo: ThaiAirways },
+		{ name: 'Etihad Airways', logo: Etihad },
+		{ name: 'Vietnam Airlines', logo: VietnamAirlines },
+		{ name: 'Pacific Airlines', logo: PacificAirlines },
+		{ name: 'VietJet Air', logo: VietJet },
+		{ name: 'Bamboo Airways', logo: Bamboo },
+		{ name: 'Vietravel Airlines', logo: Vietravel },
+		{ name: 'Cathay Pacific', logo: Cathay },
 	];
 
 	return (

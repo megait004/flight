@@ -1,17 +1,31 @@
+import Acb from '@assets/banks/acb.png';
+import BIDV from '@assets/banks/bidv.png';
+import Donga from '@assets/banks/donga.png';
+import HDBank from '@assets/banks/hdbank.png';
+import Maritime from '@assets/banks/msb.png';
+import Sacombank from '@assets/banks/sacombank.png';
+import Techcombank from '@assets/banks/techcombank.png';
+import Vietcombank from '@assets/banks/vietcombank.png';
+import Vietinbank from '@assets/banks/vietinbank.png';
+import VPBank from '@assets/banks/vpbank.png';
 import React from 'react';
+
+import Bank from '@assets/icons/bank.png';
+import Home from '@assets/icons/home.png';
+import Money from '@assets/icons/money.png';
 
 const PaymentMethods: React.FC = () => {
 	const banks = [
-		{ name: 'VPBank', logo: '/banks/vpbank.png' },
-		{ name: 'Techcombank', logo: '/banks/techcombank.png' },
-		{ name: 'DongA Bank', logo: '/banks/donga.png' },
-		{ name: 'ACB', logo: '/banks/acb.png' },
-		{ name: 'Maritime Bank', logo: '/banks/msb.png' },
-		{ name: 'HDBank', logo: '/banks/hdbank.png' },
-		{ name: 'Vietinbank', logo: '/banks/vietinbank.png' },
-		{ name: 'Vietcombank', logo: '/banks/vietcombank.png' },
-		{ name: 'Sacombank', logo: '/banks/sacombank.png' },
-		{ name: 'BIDV', logo: '/banks/bidv.png' },
+		{ name: 'VPBank', logo: VPBank },
+		{ name: 'Techcombank', logo: Techcombank },
+		{ name: 'DongA Bank', logo: Donga },
+		{ name: 'ACB', logo: Acb },
+		{ name: 'Maritime Bank', logo: Maritime },
+		{ name: 'HDBank', logo: HDBank },
+		{ name: 'Vietinbank', logo: Vietinbank },
+		{ name: 'Vietcombank', logo: Vietcombank },
+		{ name: 'Sacombank', logo: Sacombank },
+		{ name: 'BIDV', logo: BIDV },
 	];
 
 	return (
@@ -20,11 +34,7 @@ const PaymentMethods: React.FC = () => {
 			<div className='space-y-4'>
 				<div className='flex items-start gap-4 rounded-lg bg-white p-4'>
 					<div className='mt-1'>
-						<img
-							src='/icons/money.png'
-							alt='Office'
-							className='h-8 w-8'
-						/>
+						<img src={Money} alt='Office' className='h-8 w-8' />
 					</div>
 					<div>
 						<h3 className='font-bold text-gray-800'>
@@ -42,11 +52,7 @@ const PaymentMethods: React.FC = () => {
 				</div>
 				<div className='flex items-start gap-4 rounded-lg bg-white p-4'>
 					<div className='mt-1'>
-						<img
-							src='/icons/home.png'
-							alt='Home'
-							className='h-8 w-8'
-						/>
+						<img src={Home} alt='Home' className='h-8 w-8' />
 					</div>
 					<div>
 						<h3 className='font-bold text-gray-800'>
@@ -65,11 +71,7 @@ const PaymentMethods: React.FC = () => {
 
 				<div className='flex items-start gap-4 rounded-lg bg-white p-4'>
 					<div className='mt-1'>
-						<img
-							src='/icons/bank.png'
-							alt='Bank'
-							className='h-8 w-8'
-						/>
+						<img src={Bank} alt='Bank' className='h-8 w-8' />
 					</div>
 					<div>
 						<h3 className='font-bold text-gray-800'>

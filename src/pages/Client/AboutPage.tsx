@@ -4,10 +4,15 @@ import {
 	faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-
+interface Data {
+	address: string;
+	email: string;
+	hotline: string;
+	name: string;
+}
 const AboutPage: React.FC = () => {
 	const sidebarLinks = [
 		'Giới thiệu',
@@ -20,11 +25,21 @@ const AboutPage: React.FC = () => {
 		'Câu hỏi thường gặp',
 		'Liên hệ',
 	];
-
+	const [data, setData] = useState<Data>({
+		address: '',
+		email: '',
+		hotline: '',
+		name: '',
+	});
+	useEffect(() => {
+		fetch('/data.json')
+			.then((res) => res.json())
+			.then((data) => setData(data));
+	}, []);
 	return (
 		<>
 			<Helmet>
-				<title>Giới thiệu - Săn Vé Giá Rẻ 24h</title>
+				<title>Giới thiệu - {data.name}</title>
 			</Helmet>
 
 			<div className='bg-gray-100 py-4'>
@@ -72,7 +87,7 @@ const AboutPage: React.FC = () => {
 								<p>
 									Hiện nay,{' '}
 									<span className='font-semibold text-[#003C71]'>
-										Săn Vé Giá Rẻ 24h
+										{data.name}
 									</span>{' '}
 									là doanh nghiệp hoạt động theo mô hình đại
 									lý du lịch trực tuyến - chuyên cung cấp các
@@ -85,7 +100,7 @@ const AboutPage: React.FC = () => {
 								<p>
 									Riêng lĩnh vực vé máy bay,{' '}
 									<span className='font-semibold text-[#003C71]'>
-										Săn Vé Giá Rẻ 24h
+										{data.name}
 									</span>{' '}
 									hiện là đại lý cấp 1 của các hãng nội địa và
 									một số hãng hàng không quốc tế, đảm bảo giúp
@@ -98,7 +113,7 @@ const AboutPage: React.FC = () => {
 								<p>
 									Đặc biệt,{' '}
 									<span className='font-semibold text-[#003C71]'>
-										Săn Vé Giá Rẻ 24h
+										{data.name}
 									</span>{' '}
 									còn chuyên thiết kế các chương trình du lịch
 									Free & Easy, là loại hình du lịch kết hợp
@@ -117,7 +132,7 @@ const AboutPage: React.FC = () => {
 								<p>
 									Ngoài ra,{' '}
 									<span className='font-semibold text-[#003C71]'>
-										Săn Vé Giá Rẻ 24h
+										{data.name}
 									</span>{' '}
 									còn là cổng thông tin về du lịch, chia sẻ
 									mọi mặt mà cộng đồng mê dịch chuyển quan
@@ -154,10 +169,10 @@ const AboutPage: React.FC = () => {
 										Hotline:
 									</span>
 									<a
-										href='tel:024 7109 8963'
+										href={`tel:${data.hotline}`}
 										className='ml-2 hover:text-[#ff6805]'
 									>
-										024 7109 8963
+										{data.hotline}
 									</a>
 								</div>
 							</div>
@@ -172,10 +187,10 @@ const AboutPage: React.FC = () => {
 										E-mail:
 									</span>
 									<a
-										href='mailto:noreply@sanvegiare24h7.com'
+										href={`mailto:${data.email}`}
 										className='ml-2 hover:text-[#ff6805]'
 									>
-										noreply@sanvegiare24h7.com
+										{data.email}
 									</a>
 								</div>
 							</div>

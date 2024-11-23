@@ -4,10 +4,15 @@ import {
 	faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-
+interface Data {
+	address: string;
+	email: string;
+	hotline: string;
+	name: string;
+}
 const ContactPage: React.FC = () => {
 	const [formData, setFormData] = useState({
 		name: '',
@@ -15,6 +20,17 @@ const ContactPage: React.FC = () => {
 		email: '',
 		content: '',
 	});
+	const [data, setData] = useState<Data>({
+		address: '',
+		email: '',
+		hotline: '',
+		name: '',
+	});
+	useEffect(() => {
+		fetch('/data.json')
+			.then((res) => res.json())
+			.then((data) => setData(data));
+	}, []);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -34,7 +50,7 @@ const ContactPage: React.FC = () => {
 	return (
 		<>
 			<Helmet>
-				<title>Liên hệ - Săn Vé Giá Rẻ 24h</title>
+				<title>Liên hệ - {data.name}</title>
 			</Helmet>
 
 			<div className='bg-gray-100 py-4'>
@@ -74,9 +90,7 @@ const ContactPage: React.FC = () => {
 										Trụ sở chính:
 									</span>
 									<p className='text-gray-600'>
-										Tầng 3 toà B, số 2 phố Long Biên 2,
-										phường Ngọc Lâm, quận Long Biên, Tp. Hà
-										Nội
+										{data.address}
 									</p>
 								</div>
 							</div>
@@ -91,10 +105,10 @@ const ContactPage: React.FC = () => {
 										Hotline:
 									</span>
 									<a
-										href='tel:024 7109 8963'
+										href={`tel:${data.hotline}`}
 										className='ml-2 text-gray-600 hover:text-[#ff6805]'
 									>
-										024 7109 8963
+										{data.hotline}
 									</a>
 								</div>
 							</div>
@@ -109,10 +123,10 @@ const ContactPage: React.FC = () => {
 										Email:
 									</span>
 									<a
-										href='mailto:sanvegiare24h7@gmail.com'
+										href={`mailto:${data.email}`}
 										className='ml-2 text-gray-600 hover:text-[#ff6805]'
 									>
-										sanvegiare24h7@gmail.com
+										{data.email}
 									</a>
 								</div>
 							</div>

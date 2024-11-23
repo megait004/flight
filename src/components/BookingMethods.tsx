@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPhone } from 'react-icons/fa';
 import { FaLocationDot } from 'react-icons/fa6';
 import { IoEarth } from 'react-icons/io5';
-
+interface Data {
+	address: string;
+	email: string;
+	hotline: string;
+	name: string;
+}
 const BookingMethods: React.FC = () => {
+	const [data, setData] = useState<Data>({
+		address: '',
+		email: '',
+		hotline: '',
+		name: '',
+	});
+	useEffect(() => {
+		fetch('/data.json')
+			.then((res) => res.json())
+			.then((data) => setData(data));
+	}, []);
 	return (
 		<div className='bg-gray-100 p-4'>
 			<h2 className='mb-6 text-xl font-bold'>
@@ -19,22 +35,22 @@ const BookingMethods: React.FC = () => {
 				<div className='flex items-center gap-2'>
 					<span className='font-bold'>2.</span>
 					<FaPhone className='text-blue-600' />
-					<span>Gọi điện thoại cho SĂN VÉ GIÁ RẺ 24h</span>
+					<span>Gọi điện thoại cho {data.name}</span>
 				</div>
 				<div className='ml-6 flex items-center gap-2'>
 					<span>Hotline:</span>
 					<a
-						href='tel:024 7109 8963'
+						href={`tel:${data.hotline}`}
 						className='font-bold text-red-500'
 					>
-						024 7109 8963
+						{data.hotline}
 					</a>
 				</div>
 
 				<div className='flex items-center gap-2'>
 					<span className='font-bold'>3.</span>
 					<FaLocationDot className='text-blue-600' />
-					<span>Đến trực tiếp văn phòng SĂN VÉ GIÁ RẺ 24h</span>
+					<span>Đến trực tiếp văn phòng {data.name}</span>
 				</div>
 				<div className='ml-6'>
 					<div className='inline-block rounded-lg bg-[#E8F4FB] p-4'>

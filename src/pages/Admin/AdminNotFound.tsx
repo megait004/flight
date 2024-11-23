@@ -6,7 +6,7 @@ const AdminNotFound: React.FC = () => {
 	useEffect(() => {
 		navigate('/admin');
 	}, [navigate]);
-	return <>AdminNotFound</>;
+	return <>???</>;
 };
 
 export default AdminNotFound;

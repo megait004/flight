@@ -2,7 +2,7 @@ import BookingMethods from '@components/BookingMethods';
 import PaymentMethods from '@components/PaymentMethods';
 import PopularFlights from '@components/PopularFlights';
 import WhyChooseUs from '@components/WhyChooseUs';
-import HeroSection from '@pages/Client/Index/HeroSection';
+import HeroSection from '@pages/Client/HeroSection';
 import React from 'react';
 
 const Index: React.FC = () => {
@@ -10,7 +10,7 @@ const Index: React.FC = () => {
 		<>
 			<HeroSection />
 			<PopularFlights />
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto px-4">
+			<div className='mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 md:grid-cols-2'>
 				<BookingMethods />
 				<PaymentMethods />
 			</div>

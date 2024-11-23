@@ -5,10 +5,26 @@ import {
 	faPhone,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+interface Data {
+	address: string;
+	email: string;
+	hotline: string;
+	name: string;
+}
 const Footer: React.FC = () => {
+	const [data, setData] = useState<Data>({
+		address: '',
+		email: '',
+		hotline: '',
+		name: '',
+	});
+	useEffect(() => {
+		fetch('/data.json')
+			.then((res) => res.json())
+			.then((data) => setData(data));
+	}, []);
 	const footerLinks = {
 		about: [
 			{ name: 'Giới thiệu', href: '/gioi-thieu' },
@@ -40,7 +56,7 @@ const Footer: React.FC = () => {
 									href='tel:02471098963'
 									className='hover:text-[#ff6805]'
 								>
-									024 7109 8963
+									{data.hotline}
 								</a>
 							</div>
 							<div className='flex items-center gap-2'>
@@ -48,7 +64,12 @@ const Footer: React.FC = () => {
 									icon={faEnvelope}
 									className='text-[#ff6805]'
 								/>
-								<span>sanvegiare24h7@gmail.com</span>
+								<a
+									href={`mailto:${data.email}`}
+									className='hover:text-[#ff6805]'
+								>
+									{data.email}
+								</a>
 							</div>
 						</div>
 					</div>
@@ -90,26 +111,20 @@ const Footer: React.FC = () => {
 							Thông tin công ty
 						</h3>
 						<div className='space-y-2 text-sm'>
-							<p>
-								CÔNG TY TNHH VÉ MÁY BAY TRỰC TUYẾN V-BAY VIỆT
-								NAM
-							</p>
+							<p>{data.name}</p>
 							<div className='flex items-center gap-2'>
 								<FontAwesomeIcon
 									icon={faLocationDot}
 									className='text-[#ff6805]'
 								/>
-								<p>
-									Tầng 3 toà B, số 2 phố Long Biên 2, P. Ngọc
-									Lâm, Q. Long Biên, Hà Nội
-								</p>
+								<p>{data.address}</p>
 							</div>
 							<div className='flex items-center gap-2'>
 								<FontAwesomeIcon
 									icon={faPhone}
 									className='text-[#ff6805]'
 								/>
-								<p>Hotline: 024 7109 8963 (8:30 - 17:30)</p>
+								<p>{data.hotline}</p>
 							</div>
 						</div>
 					</div>
