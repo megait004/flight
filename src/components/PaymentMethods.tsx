@@ -34,7 +34,12 @@ const PaymentMethods: React.FC = () => {
 			<div className='space-y-4'>
 				<div className='flex items-start gap-4 rounded-lg bg-white p-4'>
 					<div className='mt-1'>
-						<img src={Money} alt='Office' className='h-8 w-8' />
+						<img
+							src={Money}
+							alt='Office'
+							loading='lazy'
+							className='h-8 w-8'
+						/>
 					</div>
 					<div>
 						<h3 className='font-bold text-gray-800'>
@@ -52,7 +57,12 @@ const PaymentMethods: React.FC = () => {
 				</div>
 				<div className='flex items-start gap-4 rounded-lg bg-white p-4'>
 					<div className='mt-1'>
-						<img src={Home} alt='Home' className='h-8 w-8' />
+						<img
+							src={Home}
+							alt='Home'
+							loading='lazy'
+							className='h-8 w-8'
+						/>
 					</div>
 					<div>
 						<h3 className='font-bold text-gray-800'>
@@ -71,7 +81,12 @@ const PaymentMethods: React.FC = () => {
 
 				<div className='flex items-start gap-4 rounded-lg bg-white p-4'>
 					<div className='mt-1'>
-						<img src={Bank} alt='Bank' className='h-8 w-8' />
+						<img
+							src={Bank}
+							alt='Bank'
+							loading='lazy'
+							className='h-8 w-8'
+						/>
 					</div>
 					<div>
 						<h3 className='font-bold text-gray-800'>
